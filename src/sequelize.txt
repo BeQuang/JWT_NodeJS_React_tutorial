@@ -1,0 +1,18 @@
+Các câu lệnh chạy để khởi tạo ban đầu cho một DB
+
+Link tham khảo: https://sequelize.org/docs/v6/other-topics/migrations/
+
+Bước 1: node_modules/.bin/sequelize init
+Khởi tại các file thư mục cần thiết
+
+Bước 2: npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
+Lệnh VD để tạo ra một Bảng cho DB (Tuy nhiên cần phải thay đổi các thông số phù hợp với Bảng dự định tạo)
+
+Bước 3: npx sequelize-cli db:migrate
+Chèn Bảng vừa tạo vào DB đã được kết nối trước đó
+
+Bước 4: npx sequelize-cli seed:generate --name demo-user
+Tạo file seeders để tạo dữ liệu Fake (Form mẫu thôi còn muốn thêm data thế nào phải tự tạo)
+
+Bước 5: npx sequelize-cli db:seed:all
+Đẩy data Fake vừa tạo lên DB
