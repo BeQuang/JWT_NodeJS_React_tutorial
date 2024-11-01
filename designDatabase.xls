@@ -1,0 +1,15 @@
+user		role		project		project_user	Table mapping
+id		id		id		id	
+username		url		name		project_id	
+address		description		description		user_id	
+phone				startDate			
+sex				customerId	Foreign key		
+email							
+password							
+group_id	Foreign key						
+							
+							
+group		group_role	Table mapping				
+id		id					
+name		group_id					
+description		role_id					
