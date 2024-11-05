@@ -32,9 +32,28 @@ const handleRegister = async (req, res) => {
     return res.status(200).json({
       EM: data.EM, // error message
       EC: data.EC, // error code
-      DT: "", // date
+      DT: data.DT, // date
     });
   } catch (err) {
+    return res.status(500).json({
+      EM: "Error from sever", // error message
+      EC: "-1", // error code
+      DT: "", // date
+    });
+  }
+};
+
+const handleLogin = async (req, res) => {
+  try {
+    let data = await loginRegisterService.handleUserLogin(req.body);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({
       EM: "Error from sever", // error message
       EC: "-1", // error code
@@ -46,4 +65,5 @@ const handleRegister = async (req, res) => {
 module.exports = {
   testAPI,
   handleRegister,
+  handleLogin,
 };
