@@ -1,5 +1,6 @@
 import { where } from "sequelize/lib/sequelize";
 import db from "../models/index";
+import Validate from "../Validate/Validate";
 
 const getAllUser = async () => {
   try {
@@ -62,8 +63,19 @@ const getUserWithPagination = async (page, limit) => {
   }
 };
 
-const createUser = async (rawData) => {
+const createUser = async (data) => {
   try {
+    let validRegister = await Validate.validEPUPExists(data);
+    if (validRegister && validRegister.EC === 1) {
+      return validRegister;
+    }
+
+    await db.User.create(data);
+    return {
+      EM: "Create user successfully",
+      EC: 0,
+      DT: data,
+    };
   } catch (e) {
     console.log(e);
     return {
