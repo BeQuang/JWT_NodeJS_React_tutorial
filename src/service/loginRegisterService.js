@@ -1,13 +1,6 @@
 import db from "../models/index";
-import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
 import Validate from "../Validate/Validate";
-
-const salt = bcrypt.genSaltSync(10);
-
-const hashUserPassword = (userPassword) => {
-  return bcrypt.hashSync(userPassword, salt);
-};
 
 const registerNewUser = async (rawUserData) => {
   try {
@@ -18,7 +11,7 @@ const registerNewUser = async (rawUserData) => {
       return validRegister;
     }
     // hash userPassword
-    let hashPassword = hashUserPassword(rawUserData.password);
+    let hashPassword = Validate.hashUserPassword(rawUserData.password);
 
     // crete new user
     await db.User.create({

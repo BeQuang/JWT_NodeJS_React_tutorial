@@ -38,7 +38,8 @@ const getUserWithPagination = async (page, limit) => {
       offset: offset,
       limit: limit,
       attributes: ["id", "email", "username", "address", "sex", "phone"],
-      include: { model: db.Group, attributes: ["name", "description"] },
+      include: { model: db.Group, attributes: ["id", "name", "description"] },
+      order: [["id", "ASC"]],
     });
 
     let totalPages = Math.ceil(count / limit);
@@ -70,7 +71,9 @@ const createUser = async (data) => {
       return validRegister;
     }
 
-    await db.User.create(data);
+    let hashPassword = Validate.hashUserPassword(data.password);
+
+    await db.User.create({ ...data, password: hashPassword });
     return {
       EM: "Create user successfully",
       EC: 0,
@@ -88,15 +91,27 @@ const createUser = async (data) => {
 
 const updateUser = async (rawData) => {
   try {
+    if (!rawData.groupId) {
+      return {
+        EM: "Group ID is empty",
+        EC: -1,
+        DT: [],
+      };
+    }
     let user = await db.User.findOne({
       where: { id: rawData.id },
     });
     if (user) {
       //update user
-      user.save();
+      await user.update({
+        username: rawData.username,
+        address: rawData.address,
+        sex: rawData.sex,
+        groupId: rawData.groupId,
+      });
       return {
         EM: "Update user successfully",
-        EC: -1,
+        EC: 0,
         DT: [],
       };
     } else {
