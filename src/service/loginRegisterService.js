@@ -1,6 +1,10 @@
 import db from "../models/index";
 import { Op } from "sequelize";
 import Validate from "../Validate/Validate";
+import { getGroupWithRoles } from "./JWTService";
+import { createJWT } from "../middleware/JWTActions";
+
+require("dotenv").config();
 
 const registerNewUser = async (rawUserData) => {
   try {
@@ -21,6 +25,7 @@ const registerNewUser = async (rawUserData) => {
       sex: rawUserData.gender,
       address: rawUserData.address,
       phone: rawUserData.phoneNumber,
+      groupId: 5,
     });
 
     return {
@@ -52,10 +57,20 @@ const handleUserLogin = async (rawData) => {
       );
 
       if (isCorrectPassword) {
+        // Get Token
+        let groupWithRoles = await getGroupWithRoles(user);
+        let payload = {
+          email: user.email,
+          groupWithRoles,
+          expiresIn: process.env.JWT_EXPIRES_IN,
+        };
+
+        let token = createJWT(payload);
+
         return {
           EM: "Login successfully",
           EC: 0,
-          DT: "",
+          DT: { access_token: token, data: groupWithRoles },
         };
       }
     }
