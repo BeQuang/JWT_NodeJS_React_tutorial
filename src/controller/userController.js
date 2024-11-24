@@ -2,7 +2,7 @@ import userApiService from "../service/userApiService";
 
 const readFunc = async (req, res) => {
   try {
-    console.log("Cookies: ", req.cookies);
+    console.log("User: ", req.user);
 
     if (req.query.page && req.query.limit) {
       let page = req.query.page;
