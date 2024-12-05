@@ -37,6 +37,134 @@ const createNewRoles = async (roles) => {
   }
 };
 
+const getAllRoles = async () => {
+  try {
+    let roles = await db.Role.findAll({
+      attributes: ["id", "url", "description"],
+    });
+    if (roles) {
+      return {
+        EM: "Get Roles successfully",
+        EC: 0,
+        DT: roles,
+      };
+    }
+
+    return {
+      EM: "Get roles failed",
+      EC: -1,
+      DT: [],
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      EM: "Something wrong with server response",
+      EC: -1,
+      DT: [],
+    };
+  }
+};
+
+const getRoleWithPagination = async (page, limit) => {
+  try {
+    let offset = (page - 1) * limit;
+    const { count, rows } = await db.Role.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      attributes: ["id", "url", "description"],
+      order: [["id", "ASC"]],
+    });
+
+    let totalPages = Math.ceil(count / limit);
+    let data = {
+      totalRows: count,
+      totalPages: totalPages,
+      roles: rows,
+    };
+
+    return {
+      EM: "Get Roles successfully",
+      EC: 0,
+      DT: data,
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      EM: "Something wrong with server response",
+      EC: -1,
+      DT: [],
+    };
+  }
+};
+
+// const updateRole = async (rawData) => {
+//   try {
+//     let role = await db.Role.findOne({
+//       where: { id: rawData.id },
+//     });
+//     if (role) {
+//       //update role
+//       await role.update({
+//         url: rawData.url,
+//         description: rawData.address,
+//       });
+//       return {
+//         EM: "Update Role successfully",
+//         EC: 0,
+//         DT: [],
+//       };
+//     } else {
+//       // not found
+//       return {
+//         EM: "Not found role",
+//         EC: -1,
+//         DT: [],
+//       };
+//     }
+//   } catch (e) {
+//     console.log(e);
+//     return {
+//       EM: "Something wrong with server response",
+//       EC: -1,
+//       DT: [],
+//     };
+//   }
+// };
+
+const deleteRole = async (id) => {
+  try {
+    let role = await db.Role.findOne({
+      where: { id: id },
+    });
+
+    if (role) {
+      await role.destroy();
+      return {
+        EM: "Delete Role successfully",
+        EC: 0,
+        DT: [],
+      };
+    } else {
+      return {
+        EM: "Role not exist",
+        EC: -1,
+        DT: [],
+      };
+    }
+  } catch (e) {
+    console.log(e);
+    return {
+      EM: "Something wrong with server response",
+      EC: -1,
+      DT: [],
+    };
+  }
+};
+
 module.exports = {
   createNewRoles,
+  getAllRoles,
+  getRoleWithPagination,
+  // updateRole,
+  deleteRole,
 };
