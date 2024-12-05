@@ -25,8 +25,6 @@ const createNewRoles = async (roles) => {
       EC: 0,
       DT: [],
     };
-
-    console.log(currentRoles);
   } catch (error) {
     console.log(error);
     return {
@@ -97,39 +95,39 @@ const getRoleWithPagination = async (page, limit) => {
   }
 };
 
-// const updateRole = async (rawData) => {
-//   try {
-//     let role = await db.Role.findOne({
-//       where: { id: rawData.id },
-//     });
-//     if (role) {
-//       //update role
-//       await role.update({
-//         url: rawData.url,
-//         description: rawData.address,
-//       });
-//       return {
-//         EM: "Update Role successfully",
-//         EC: 0,
-//         DT: [],
-//       };
-//     } else {
-//       // not found
-//       return {
-//         EM: "Not found role",
-//         EC: -1,
-//         DT: [],
-//       };
-//     }
-//   } catch (e) {
-//     console.log(e);
-//     return {
-//       EM: "Something wrong with server response",
-//       EC: -1,
-//       DT: [],
-//     };
-//   }
-// };
+const updateRole = async (rawData) => {
+  try {
+    let role = await db.Role.findOne({
+      where: { id: rawData.id },
+    });
+    if (role) {
+      //update role
+      await role.update({
+        url: rawData.url,
+        description: rawData.description,
+      });
+      return {
+        EM: "Update Role successfully",
+        EC: 0,
+        DT: [],
+      };
+    } else {
+      // not found
+      return {
+        EM: "Not found role",
+        EC: -1,
+        DT: [],
+      };
+    }
+  } catch (e) {
+    console.log(e);
+    return {
+      EM: "Something wrong with server response",
+      EC: -1,
+      DT: [],
+    };
+  }
+};
 
 const deleteRole = async (id) => {
   try {
@@ -165,6 +163,6 @@ module.exports = {
   createNewRoles,
   getAllRoles,
   getRoleWithPagination,
-  // updateRole,
+  updateRole,
   deleteRole,
 };
